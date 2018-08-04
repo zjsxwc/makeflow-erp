@@ -1,0 +1,243 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block body %}
+
+    <style>
+        .makeflow-place-circle {
+            cursor: pointer;
+        }
+        .makeflow-place-text {
+            cursor: pointer;
+        }
+    </style>
+
+    {% verbatim %}
+        <div id="app">
+            <template v-for="makeflowGraph in makeflowGraphs">
+                {{ makeflowGraph.makeflowLabel }}
+                <br>
+                <svg xmlns="http://www.w3.org/2000/svg" version="1.1"
+                    :width="makeflowGraph.svgData.width"
+                    :height="makeflowGraph.svgData.height">
+
+                   <template v-for="svgPlace in makeflowGraph.svgData.places">
+
+                        <circle stroke="black" stroke-width="2" class="makeflow-place-circle"
+                        @click="choosePlace(svgPlace)"
+                        @mouseover="hoverPlace(svgPlace)"
+                            :cx="svgPlace.circleX"
+                            :cy="svgPlace.circleY"
+                            :r="svgPlace.circleRound"
+                            :fill="getColor(svgPlace.color, {makeflowName: makeflowGraph.makeflowName, placeName: svgPlace.placeName})"
+                            :makeflow-name="svgPlace.makeflowName"
+                            :place-name="svgPlace.placeName" />
+                        <text fill="#581845" class="makeflow-place-text"
+                        @click="choosePlace(svgPlace)"
+                            :x="svgPlace.textX"
+                            :y="svgPlace.textY" >
+                            {{svgPlace.label}}
+                        </text>
+
+                    </template>
+
+                    <template v-for="svgDirectedLine in makeflowGraph.svgData.directedLines">
+                        <line style="stroke:rgb(99,99,99);stroke-width:2"
+                            :x1="svgDirectedLine.lineStartX"
+                            :y1="svgDirectedLine.lineStartY"
+                            :x2="svgDirectedLine.lineEndX"
+                            :y2="svgDirectedLine.lineEndY" />
+                        <circle stroke="black" stroke-width="2" fill="black"
+                            :cx="svgDirectedLine.lineEndX"
+                            :cy="svgDirectedLine.lineEndY"
+                            :r="svgDirectedLine.smallRound" />
+                    </template>
+
+                </svg>
+            </template>
+            <br>
+
+            <span>节点名：{{ currentPlace.placeLabel }}[{{ currentPlace.makeflowLabel }}]</span>
+            <br>
+            <span v-if="currentPlace.isLoadingUsers">加载用户ing...</span>
+            <template v-if="!currentPlace.isLoadingUsers">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Username</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="user in currentPlace.users">
+                            <th scope="row">{{ user.id }}</th>
+                            <td>{{ user.username }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </template>
+
+            <br>
+            <span>系统中所有用户</span>
+            <br>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Username</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="user in allUsers">
+                        <th scope="row">{{ user.id }}</th>
+                        <td :style="{color: (isUserInPlace(user.id)?'red':'')}">{{ user.username }}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <input v-model="currentPlace.willBindUserIds" placeholder="英文逗号隔开的将被绑定的用户id"><button type="button" @click="bindUsers">绑定</button>
+            <input v-model="currentPlace.willRemoveUserIds" placeholder="英文逗号隔开的将被解绑的用户id"><button type="button" @click="removeUsers">解绑</button>
+
+
+        </div>
+    {% endverbatim %}
+    <script>
+        var app;
+        var LOG = console.log;
+        function vueArrayMerge (originVueArray, beMergedArray) {
+            return Object.assign({}, originVueArray, beMergedArray);
+        }
+        function vueArrayClear () {
+            return Object.assign({});
+        }
+        function vueArrayLength (vueArray) {
+            return Object.keys(vueArray).length;
+        }
+
+        require([], function () {
+            var currentPlace = {
+                makeflowName: "",
+                placeName: "",
+                makeflowLabel: "",
+                placeLabel: "",
+                users: [],
+                isLoadingUsers: false,
+                willBindUserIds: "",
+                willRemoveUserIds: ""
+            };
+            var allUsers = {{ allUsers|json_encode|raw }};
+
+            app = new Vue({
+                el: "#app",
+                data: {
+                    makeflowGraphs: {{ makeflowGraphs|json_encode|raw }},
+                    currentPlace: currentPlace,
+                    allUsers: allUsers
+                },
+                ready: function () {
+                },
+                methods: {
+                    getColor: function (defaultColor, place) {
+                        if (
+                            (place.makeflowName === this.currentPlace.makeflowName)
+                            && (place.placeName === this.currentPlace.placeName)
+                        ) {
+                            return "red";
+                        }
+                        return defaultColor;
+                    },
+                    hoverPlace: function (svgPlace) {
+                        LOG(svgPlace.placeDescription);
+                    },
+                    choosePlace: function (svgPlace) {
+                        this.currentPlace.makeflowName = svgPlace.makeflowName;
+                        this.currentPlace.placeName = svgPlace.placeName;
+                        this.currentPlace.makeflowLabel = svgPlace.makeflowLabel;
+                        this.currentPlace.placeLabel = svgPlace.placeLabel;
+
+                        this.currentPlace.isLoadingUsers = true;
+                        this.currentPlace.users = vueArrayClear();
+                        var reqData = {
+                            makeflowName: this.currentPlace.makeflowName,
+                            placeName: this.currentPlace.placeName,
+                        };
+                        $.post("/makeflow-admin/place-users", reqData, function (response) {
+                            this.currentPlace.isLoadingUsers = false;
+                            LOG(response);
+                            if (response.code === -1) {
+                                this.currentPlace.users = vueArrayMerge(vueArrayClear(), response.data.users)
+                            }
+                        }.bind(this));
+
+                    },
+
+                    loadAllUsers: function () {
+                        this.allUsers = vueArrayClear();
+                        $.post("/makeflow-admin/all-users", this.currentPlace, function (response) {
+                            LOG(response);
+                            if (response.code === -1) {
+                                this.allUsers = vueArrayMerge(vueArrayClear(), response.data.users)
+                            }
+                        }.bind(this));
+                    },
+
+                    bindUsers: function () {
+                        if (!this.currentPlace.placeName) {
+                            return;
+                        }
+                        if (!this.currentPlace.willBindUserIds) {
+                            return;
+                        }
+                        var reqData = {
+                            makeflowName: this.currentPlace.makeflowName,
+                            placeName: this.currentPlace.placeName,
+                            userIds: this.currentPlace.willBindUserIds
+                        };
+                        this.currentPlace.willBindUserIds = "";
+                        $.post("/makeflow-admin/place-bind-users", reqData, function (response) {
+                            LOG(response);
+                            if (response.code === -1) {
+                                this.currentPlace.users = vueArrayMerge(vueArrayClear(), response.data.users)
+                            }
+                        }.bind(this))
+                    },
+                    removeUsers: function () {
+                        if (!this.currentPlace.placeName) {
+                            return;
+                        }
+                        var reqData = {
+                            makeflowName: this.currentPlace.makeflowName,
+                            placeName: this.currentPlace.placeName,
+                            userIds: this.currentPlace.willRemoveUserIds
+                        };
+                        this.currentPlace.willRemoveUserIds = "";
+                        $.post("/makeflow-admin/place-remove-users", reqData, function (response) {
+                            LOG(response);
+                            if (response.code === -1) {
+                                this.currentPlace.users = vueArrayMerge(vueArrayClear(), response.data.users)
+                            }
+                        }.bind(this))
+                    },
+                    isUserInPlace: function (userId) {
+                        var isUserInPlace = false;
+                        var i;
+                        var user;
+                        for (i=0; i < vueArrayLength(this.currentPlace.users); i++) {
+                            user = this.currentPlace.users[i];
+                            if (user.id === userId) {
+                                isUserInPlace = true;
+                                break;
+                            }
+                        }
+                        return isUserInPlace;
+                    }
+
+
+                }
+            });
+        });
+    </script>
+
+
+{% endblock %}

@@ -1,0 +1,15 @@
+doctrine:
+    orm:
+        mappings:
+            PaoMianMakeflow:
+                is_bundle: false
+                type: annotation
+                dir: '%kernel.project_dir%/src/Makeflow/PaoMianMakeflow/Entity'
+                prefix: 'App\Makeflow\PaoMianMakeflow\Entity'
+
+twig:
+    paths:
+        - { namespace: PaoMianMakeflow, value: '%kernel.project_dir%/src/Makeflow/PaoMianMakeflow/View' }
+
+    debug: '%kernel.debug%'
+    strict_variables: '%kernel.debug%'

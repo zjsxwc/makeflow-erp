@@ -1,0 +1,8 @@
+doctrine:
+    orm:
+        mappings:
+            MakeflowDashboard:
+                is_bundle: false
+                type: annotation
+                dir: '%kernel.project_dir%/src/Makeflow/Dashboard/Entity'
+                prefix: 'App\Makeflow\Dashboard\Entity'

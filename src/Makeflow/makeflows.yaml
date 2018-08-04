@@ -1,0 +1,2 @@
+makeflows:
+    - App\Makeflow\PaoMianMakeflow\PaoMianMakeflow
