@@ -1,12 +1,21 @@
 
 #### Makeflow ERP/OA
 
+ENGLISH
+--
 
 Makeflow is a ERP/OA system framework based on symfony 4 project.
 
-Makeflow is inspired by the GNU tool `make`, and now we introduce the idea to the ERP/OA system where workflow is heavily used.
+Makeflow is inspired by the GNU tool `make`, and now we introduce the idea to the ERP/OA system where workflow is heavily used, the weakness of workflow is that it cannot handle the situation well when multiple unordered sibling place appears.
 
-But the weakness of workflow is that it cannot handle the situation well when multiple unordered sibling place appears.
+And i found the idea of `makefile` is perfectly suit the situation, So I started this project.
+
+
+
+中文
+---
+
+Makeflow 是一个基于Symfony 4的 ERP/OA 系统PHP框架，我在维护老ERP时，发现对于处理没有前后顺序要求的并行的工作流任务，传统的强行转换为顺序工作流很不合理，然后又发现其实`makefile`的思想很适合这种实际场景，于是有了这个项目。
 
 
 
