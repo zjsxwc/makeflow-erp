@@ -20,7 +20,7 @@ Makeflow 是一个基于Symfony 4的 ERP/OA 系统PHP框架，我在维护老ERP
 
 
 
-#### How to start your own ERP
+## How to start your own ERP
 
 >I just use the field `directory` of entity `workspace` to simulate the `makefile` directory, And every thing works fine.
  
@@ -31,7 +31,7 @@ Makeflow 是一个基于Symfony 4的 ERP/OA 系统PHP框架，我在维护老ERP
 - refer to the `PaoMianMakeflow` to write your code
 
 
-#### How to install in symfony 4 project
+## How to install in symfony 4 project
 
 
 1. inject the `MakeflowManager` to container
@@ -45,7 +45,7 @@ Makeflow 是一个基于Symfony 4的 ERP/OA 系统PHP框架，我在维护老ERP
 
 
 
-#### TODO
+## TODO
 
 - hooks and events
 
