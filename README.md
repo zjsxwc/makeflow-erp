@@ -19,9 +19,21 @@ Makeflow 是一个基于Symfony 4的 ERP/OA 系统PHP框架，我在维护老ERP
 
 
 
-#### Clou
+
+
+
+
+#### CLOU
 
 I just use the field `directory` of entity `workspace` to simulate the `makefile` directory, And every thing works fine.
+
+
+#### How to start your own ERP
+
+
+- just run `bin/console makeflow:create` to create a skeleton in `src/Makeflow/`
+
+- refer to the `PaoMianMakeflow` to write your code
 
 
 #### How to install in symfony 4 project
