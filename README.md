@@ -56,5 +56,9 @@ Makeflow 是一个基于Symfony 4的 ERP/OA 系统PHP框架，我在维护老ERP
 - add database indexes to entity
 
 
+## License
 
+[MIT](http://opensource.org/licenses/MIT)
+
+Copyright (c) 2018-present, Wang Chao
 
