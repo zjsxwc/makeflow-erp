@@ -19,6 +19,33 @@ class MakeflowUserController extends Controller
 {
 
     /**
+     * @param Workspace $workspace
+     * @param $placeName
+     * @param $userId
+     * @return array
+     */
+    private function getPlace(Workspace $workspace, $placeName, $userId)
+    {
+        $makeflowManager = $this->get("App\Makeflow\MakeflowManager");
+        $makeflows = $makeflowManager->getMakeflows();
+        $makeflowName = $workspace->getMakeflowName();
+        if (!isset($makeflows[$makeflowName])) {
+            throw new \LogicException(sprintf("Not valid makeflowName %s", $makeflowName), 1);
+        }
+        $makeflow = $makeflows[$makeflowName];
+        $places = $makeflow->getPlaces();
+        if (!isset($places[$placeName])) {
+            throw new \LogicException(sprintf("Not valid placeName %s", $placeName), 2);
+        }
+        $place = $places[$placeName];
+        if (!$place->isUserAllowedInPlace($userId)) {
+            throw new \LogicException(sprintf("User not allowed in placeName %s", $placeName), 3);
+        }
+        return [$makeflow, $places, $place];
+    }
+
+
+    /**
      * @Route("/workspace/{id}/place/{placeName}/delete-prerequisites", name="makeflow_user_delete_prerequisites_of_workspace", methods={"POST"})
      * @param Request $request
      * @param Workspace $workspace
@@ -34,51 +61,24 @@ class MakeflowUserController extends Controller
         /** @var UserInterface $currentUser */
         $currentUser = $this->getUser();
         $userId = $currentUser->getId();
-
-        $makeflowManager = $this->get("App\Makeflow\MakeflowManager");
-        $makeflows = $makeflowManager->getMakeflows();
-        $makeflowName = $workspace->getMakeflowName();
-        if (!isset($makeflows[$makeflowName])) {
-            return $this->json([
-                "code" => 1,
-            ]);
-        }
-        $makeflow = $makeflows[$makeflowName];
-        $places = $makeflow->getPlaces();
-        if (!isset($places[$placeName])) {
-            return $this->json([
-                "code" => 2,
-                "message" => sprintf("place name %s not exists", $placeName)
-            ]);
-        }
-        $place = $places[$placeName];
-        if (!$place->isUserAllowedInPlace($userId)) {
-            return $this->json([
-                "code" => 3,
-            ]);
-        }
-        $makeflowConfig = $makeflow->getMakeflowConfig();
-        $prerequisitesInConfig = $makeflowConfig[$placeName];
-        foreach ($prerequisites as $prerequisitePlaceName) {
-            if (!isset($places[$prerequisitePlaceName])) {
-                return $this->json([
-                    "code" => 2,
-                    "message" => sprintf("place name %s not exists", $prerequisitePlaceName)
-                ]);
-            }
-            if (!in_array($prerequisitePlaceName, $prerequisitesInConfig)) {
-                return $this->json([
-                    "code" => 2,
-                    "message" => sprintf("place name %s is not prerequisite", $prerequisitePlaceName)
-                ]);
-            }
-
-        }
-
-        $workspaceFactory = $this->get("App\Makeflow\WorkspaceContextFactory");
-
-        $workspaceContext = $workspaceFactory->getContext($workspace);
         try {
+            list($makeflow, $places, $place) = $this->getPlace($workspace, $placeName, $userId);
+
+            $makeflowConfig = $makeflow->getMakeflowConfig();
+            $prerequisitesInConfig = $makeflowConfig[$placeName];
+            foreach ($prerequisites as $prerequisitePlaceName) {
+                if (!isset($places[$prerequisitePlaceName])) {
+                    throw new \LogicException(sprintf("Not valid prerequisite placeName %s", $prerequisitePlaceName), 2);
+                }
+                if (!in_array($prerequisitePlaceName, $prerequisitesInConfig)) {
+                    throw new \LogicException(sprintf("Place name %s is not prerequisite", $prerequisitePlaceName), 2);
+                }
+            }
+
+            $workspaceFactory = $this->get("App\Makeflow\WorkspaceContextFactory");
+
+            $workspaceContext = $workspaceFactory->getContext($workspace);
+
             $workspaceContext->deletePrerequisites($prerequisites);
         } catch (\Throwable $throwable) {
             return $this->json([
@@ -108,37 +108,16 @@ class MakeflowUserController extends Controller
         $currentUser = $this->getUser();
         $userId = $currentUser->getId();
 
-        $makeflowManager = $this->get("App\Makeflow\MakeflowManager");
-        $makeflows = $makeflowManager->getMakeflows();
-        $makeflowName = $workspace->getMakeflowName();
-        if (!isset($makeflows[$makeflowName])) {
-            return $this->json([
-                "code" => 1,
-            ]);
-        }
-        $makeflow = $makeflows[$makeflowName];
-        $places = $makeflow->getPlaces();
-        if (!isset($places[$placeName])) {
-            return $this->json([
-                "code" => 2,
-                "message" => sprintf("place name %s not exists", $placeName)
-            ]);
-        }
-        $place = $places[$placeName];
-        if (!$place->isUserAllowedInPlace($userId)) {
-            return $this->json([
-                "code" => 3,
-            ]);
-        }
-
-        $directory = $workspace->getDirectory();
-        if (in_array($placeName, $directory)) { //如果这步工作已经被处理了，那么就不能处理，只能等待下一级主管回退
-            return $this->json([
-                "code" => 4,
-            ]);
-        }
-
         try {
+            list($makeflow, $places, $place) = $this->getPlace($workspace, $placeName, $userId);
+
+            $directory = $workspace->getDirectory();
+            if (in_array($placeName, $directory)) { //如果这步工作已经被处理了，那么就不能处理，只能等待下一级主管回退
+                return $this->json([
+                    "code" => 4,
+                ]);
+            }
+
             $response = $place->processAction($request, $workspace);
         } catch (\Throwable $throwable) {
             return $this->json([
@@ -149,7 +128,6 @@ class MakeflowUserController extends Controller
 
         return $response;
     }
-
 
 
     /**
