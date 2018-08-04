@@ -36,7 +36,7 @@ Makeflow ERP 是一个基于PHP Symfony 4的 ERP/OA 系统框架，我在维护�
 
 1. inject the `MakeflowManager` to container
 
-2. load configuration from Makeflow by add following lines to `\App\Kernel::configureContainer`:
+2. load configuration from Makeflow by adding the following lines to `\App\Kernel::configureContainer`:
 
 ```php
         //load configuration from Makeflow
