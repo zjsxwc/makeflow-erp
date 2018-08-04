@@ -8,7 +8,7 @@ Makeflow is an ERP/OA system framework based on symfony 4 project.
 
 Makeflow is inspired by the GNU tool `make`, and now we introduce the idea to the ERP/OA system where workflow is heavily used.
 
-The weakness of workflow is that it cannot handle the situation well when multiple unordered sibling place appears,
+The weakness of workflow is that it cannot handle the situation well when multiple unordered sibling places appear,
 And I found the idea of `makefile` is perfectly suit the situation, So I started this project.
 
 
