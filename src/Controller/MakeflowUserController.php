@@ -179,14 +179,7 @@ class MakeflowUserController extends Controller
     public function dashboard()
     {
         $makeflowManager = $this->get("App\Makeflow\MakeflowManager");
-
         $makeflows = $makeflowManager->getMakeflows();
-        /** @var Makeflow[] $makeflowByMakeflowClassNameMap */
-        $makeflowByMakeflowClassNameMap = [];
-        foreach ($makeflows as $makeflow) {
-            $makeflowByMakeflowClassNameMap[get_class($makeflow)] = $makeflow;
-        }
-
 
         /** @var UserInterface $currentUser */
         $currentUser = $this->getUser();

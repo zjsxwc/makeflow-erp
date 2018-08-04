@@ -189,8 +189,8 @@ abstract class Place
 
     protected function finishPlace(Workspace $workspace)
     {
-        if ($workspace->getMakeflowName() !== get_class($this->makeflow)) {
-            throw new  \LogicException(sprintf('Place %s makeflow class %s not for workspace makeflow class %s', $this->getName(), get_class($this->makeflow), $workspace->getMakeflowName()));
+        if ($workspace->getMakeflowName() !== $this->makeflow->getName()) {
+            throw new  \LogicException(sprintf('Place %s makeflow  %s not for workspace makeflow %s', $this->getName(), $this->makeflow->getName(), $workspace->getMakeflowName()));
         }
         $placeName = $this->getName();
         $workspace->addDirectory($placeName);
