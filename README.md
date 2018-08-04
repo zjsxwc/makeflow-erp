@@ -48,6 +48,8 @@ Makeflow ERP 是一个基于PHP Symfony 4的 ERP/OA 系统框架，在一般ERP�
 
 ## TODO
 
+- assign/limit next place users by previous place user in workspace
+
 - hooks and events
 
 - notify stakeholders
