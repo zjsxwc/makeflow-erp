@@ -11,7 +11,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 class DefaultController extends Controller
 {
     /**
-     * @Route("", name="workflow_admin_dashboard")
+     * @Route("", name="default")
      */
     public function index(Request $request)
     {
