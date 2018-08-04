@@ -15,7 +15,7 @@ And i found the idea of `makefile` is perfectly suit the situation, So I started
 ##### 中文
 
 
-Makeflow 是一个基于Symfony 4的 ERP/OA 系统PHP框架，我在维护老ERP时，发现对于处理没有前后顺序要求的并行的工作流任务，传统的强行转换为顺序工作流很不合理，然后又发现其实`makefile`的思想很适合这种实际场景，于是有了这个项目。
+Makeflow ERP 是一个基于PHP Symfony 4的 ERP/OA 系统框架，我在维护老ERP时，发现对于处理没有前后顺序要求的并行的工作流任务，传统的强行转换为顺序工作流很不合理，然后又发现其实`makefile`的思想很适合这种实际场景，于是有了这个项目。
 
 
 
