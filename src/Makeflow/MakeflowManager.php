@@ -110,7 +110,7 @@ class MakeflowManager
         $makeflow = null;
         foreach ($this->makeflows as $name => $mayExpectMakeflow)
         {
-            if (get_class($mayExpectMakeflow) === $workspace->getMakeflowName()) {
+            if ($mayExpectMakeflow->getName() === $workspace->getMakeflowName()) {
                 $makeflow = $mayExpectMakeflow;
                 break;
             }
