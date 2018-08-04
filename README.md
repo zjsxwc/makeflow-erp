@@ -1,8 +1,8 @@
 
-#### Makeflow ERP/OA
+# Makeflow ERP/OA
 
-ENGLISH
---
+##### ENGLISH
+
 
 Makeflow is a ERP/OA system framework based on symfony 4 project.
 
@@ -12,26 +12,21 @@ And i found the idea of `makefile` is perfectly suit the situation, So I started
 
 
 
-中文
----
+##### 中文
+
 
 Makeflow 是一个基于Symfony 4的 ERP/OA 系统PHP框架，我在维护老ERP时，发现对于处理没有前后顺序要求的并行的工作流任务，传统的强行转换为顺序工作流很不合理，然后又发现其实`makefile`的思想很适合这种实际场景，于是有了这个项目。
 
 
 
 
-
-
-
-#### CLOU
-
-I just use the field `directory` of entity `workspace` to simulate the `makefile` directory, And every thing works fine.
-
-
 #### How to start your own ERP
 
+>I just use the field `directory` of entity `workspace` to simulate the `makefile` directory, And every thing works fine.
+ 
 
-- just run `bin/console makeflow:create` to create a skeleton in `src/Makeflow/`
+
+- run `bin/console makeflow:create` to create a skeleton in `src/Makeflow/`
 
 - refer to the `PaoMianMakeflow` to write your code
 
