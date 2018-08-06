@@ -10,6 +10,7 @@ namespace App\Makeflow\PaoMianMakeflow\Place;
 
 
 use App\Makeflow\Dashboard\Entity\Workspace;
+use App\Makeflow\PaoMianMakeflow\Entity\Note;
 use App\Makeflow\Place;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -20,10 +21,25 @@ class MakePaoMianPlace extends Place
 
     public function processAction(Request $request, Workspace $workspace)
     {
+        if ($request->getMethod() === "POST") {
+            $content = $request->request->get("content");
+            $note = new Note();
+            $note->setWorkspaceId($workspace->getId());
+            $note->setContent($content);
+            $note->setName("泡泡面的日记" . time());
+            $this->entityManager->persist($note);
+            $this->entityManager->flush();
 
-        $noteList = $this->entityManager->getRepository("PaoMianMakeflow:Note")->getNoteListByWorkspaceId($workspace->getId());
+            $this->finishPlace($workspace);
 
-        dump($noteList);die;
+            return $this->json([
+                "code" => -1
+            ]);
+        }
+        $historyNoteList = $this->entityManager->getRepository("PaoMianMakeflow:Note")->getNoteListByWorkspaceId($workspace->getId());
+
+        return $this->render("make_pao_mian.html.twig", ['workspace' => $workspace, 'historyNoteList' =>  $historyNoteList]);
+
 
     }
 }
