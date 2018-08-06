@@ -40,7 +40,7 @@ Makeflow ERP 是一个基于PHP Symfony 4的 ERP/OA 系统框架，在一般ERP�
 - refer to the [`PaoMianMakeflow`](https://github.com/zjsxwc/makeflow-erp/tree/master/src/Makeflow/PaoMianMakeflow) to write your code
 
 
-- to enable your new makeflow by add the makeflow class name to `/src/Makeflow/makeflows.yaml`
+- to enable your new makeflow by adding the makeflow class name to `/src/Makeflow/makeflows.yaml`
 
 
 ## How to install in symfony 4 project
