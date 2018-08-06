@@ -11,8 +11,10 @@ Makeflow is inspired by the GNU tool `make`, and now we introduce the idea to th
 The weakness of workflow is that it cannot handle the situation well when multiple unordered sibling places appear,
 And I found the idea of `makefile` perfectly suits the situation, So I started this project.
 
+
+
 <br>
-<br>
+
 
 ##### 中文
 
@@ -22,6 +24,8 @@ Makeflow ERP 是一个基于PHP Symfony 4的 ERP/OA 系统框架，在一般ERP�
 
 因为用户是基于工作流place节点鉴权，于是也就没有了传统的ACL角色菜单等鉴权方式，算是省了代码写权限管理。
 
+
+<br>
 
 ## How to start your own ERP
 
