@@ -1,7 +1,7 @@
 
 <p align="center">
     <a href="#">
-      <img src="https://raw.githubusercontent.com/zjsxwc/makeflow-erp/master/src/Makeflow/PaoMianMakeflow/makeflow.png" width=240 height=334>
+      <img src="https://raw.githubusercontent.com/zjsxwc/makeflow-erp/master/src/Makeflow/PaoMianMakeflow/makeflow.png" width=209>
     </a>
 </p>
 
