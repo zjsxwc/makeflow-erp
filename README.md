@@ -4,7 +4,7 @@
 ##### ENGLISH
 
 
-Makeflow is an ERP/OA system framework based on symfony 4 project.
+Makeflow is an ERP/OA system framework based on Symfony 4 project.
 
 Makeflow is inspired by the GNU tool `make`, and now we introduce the idea to the ERP/OA system where workflow is heavily used.
 
