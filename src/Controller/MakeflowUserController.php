@@ -63,23 +63,10 @@ class MakeflowUserController extends Controller
         $userId = $currentUser->getId();
         try {
             list($makeflow, $places, $place) = $this->getPlace($workspace, $placeName, $userId);
-
-            $makeflowConfig = $makeflow->getMakeflowConfig();
-            $prerequisitesInConfig = $makeflowConfig[$placeName];
-            foreach ($prerequisites as $prerequisitePlaceName) {
-                if (!isset($places[$prerequisitePlaceName])) {
-                    throw new \LogicException(sprintf("Not valid prerequisite placeName %s", $prerequisitePlaceName), 2);
-                }
-                if (!in_array($prerequisitePlaceName, $prerequisitesInConfig)) {
-                    throw new \LogicException(sprintf("Place name %s is not prerequisite", $prerequisitePlaceName), 2);
-                }
-            }
-
             $workspaceFactory = $this->get("App\Makeflow\WorkspaceContextFactory");
-
             $workspaceContext = $workspaceFactory->getContext($workspace);
 
-            $workspaceContext->deletePrerequisites($prerequisites);
+            $workspaceContext->fromProcessingPlaceDeletePrerequisites($place, $prerequisites);
         } catch (\Throwable $throwable) {
             return $this->json([
                 "code" => $throwable->getCode(),

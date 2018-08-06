@@ -89,15 +89,15 @@ class WorkspaceContext
         if (!isset($makeflowConfig[$processingPlace->getName()])) {
             throw new  \LogicException(sprintf('Place name %s is not in makeflow config', $processingPlace->getName()));
         }
-        $isPrerequisitePlaceNamesValid = true;
+
+        $places = $this->makeflow->getPlaces();
         foreach ($prerequisitePlaceNames as $prerequisitePlaceName) {
-            if (!in_array($prerequisitePlaceName, $makeflowConfig[$processingPlace->getName()])) {
-                $isPrerequisitePlaceNamesValid = false;
-                break;
+            if (!isset($places[$prerequisitePlaceName])) {
+                throw new \LogicException(sprintf("Not valid prerequisite placeName %s", $prerequisitePlaceName), 2);
             }
-        }
-        if (!$isPrerequisitePlaceNamesValid) {
-            throw new  \LogicException(sprintf('Some of prerequisite place names (%s) are not in allowed place names (%s)', json_encode($prerequisitePlaceNames), json_encode($makeflowConfig[$processingPlace->getName()])));
+            if (!in_array($prerequisitePlaceName, $makeflowConfig[$processingPlace->getName()])) {
+                throw new  \LogicException(sprintf('Some of prerequisite place names (%s) are not in allowed place names (%s)', json_encode($prerequisitePlaceNames), json_encode($makeflowConfig[$processingPlace->getName()])));
+            }
         }
 
         $workspaceDirectory = $this->workspace->getDirectory();
@@ -178,23 +178,5 @@ class WorkspaceContext
         return $processingPlaces;
 
     }
-
-    /**
-     * @param string[] $prerequisites
-     */
-    public function deletePrerequisites($prerequisites)
-    {
-        $directory = $this->workspace->getDirectory();
-        $newDirectory = [];
-        foreach ($directory as $placeName) {
-            if (in_array($placeName, $prerequisites)) {
-                continue;
-            }
-            $newDirectory[] = $placeName;
-        }
-        $this->workspace->setDirectory($newDirectory);
-        $this->entityManager->flush();
-    }
-
 
 }
