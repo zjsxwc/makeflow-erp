@@ -1,6 +1,6 @@
 
 <p align="center">
-![](makeflow.png)
+![](./makeflow.png)
   </p>
 
 
