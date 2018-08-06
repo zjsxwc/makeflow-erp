@@ -29,6 +29,8 @@ class EatPaoMianPlace extends Place
             $note->setContent($content);
             $note->setName("吃泡面的日记" . time());
             $this->entityManager->persist($note);
+
+            $workspace->setStatus(Workspace::STATUS_FINISHED);
             $this->entityManager->flush();
 
             $this->finishPlace($workspace);
