@@ -48,7 +48,6 @@ Makeflow ERP 是一个基于PHP Symfony 4的 ERP/OA 系统框架，在一般ERP�
 
 ## TODO
 
-- could assign/limit next place users by previous place user in workspace when there is only one previous place
 
 - hooks and events
 
@@ -56,7 +55,9 @@ Makeflow ERP 是一个基于PHP Symfony 4的 ERP/OA 系统框架，在一般ERP�
 
 - forum in workspace
 
-- add database indexes to entity
+- add database indexes to entities
+
+- could assign/limit next place users by previous place user in workspace when there is only one previous place
 
 
 ## License
