@@ -33,7 +33,7 @@ Makeflow ERP 是一个基于PHP Symfony 4的 ERP/OA 系统框架，在一般ERP�
 
 - run `bin/console makeflow:create` to create a skeleton in `src/Makeflow/`
 
-- refer to the `PaoMianMakeflow` to write your code
+- refer to the [`PaoMianMakeflow`](https://github.com/zjsxwc/makeflow-erp/tree/master/src/Makeflow/PaoMianMakeflow) to write your code
 
 
 
