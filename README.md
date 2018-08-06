@@ -11,7 +11,8 @@ Makeflow is inspired by the GNU tool `make`, and now we introduce the idea to th
 The weakness of workflow is that it cannot handle the situation well when multiple unordered sibling places appear,
 And I found the idea of `makefile` perfectly suits the situation, So I started this project.
 
-
+<br>
+<br>
 
 ##### 中文
 
@@ -32,6 +33,8 @@ Makeflow ERP 是一个基于PHP Symfony 4的 ERP/OA 系统框架，在一般ERP�
 
 - refer to the [`PaoMianMakeflow`](https://github.com/zjsxwc/makeflow-erp/tree/master/src/Makeflow/PaoMianMakeflow) to write your code
 
+
+- to enable your new makeflow by add the makeflow class name to `/src/Makeflow/makeflows.yaml`
 
 
 ## How to install in symfony 4 project
