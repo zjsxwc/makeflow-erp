@@ -1,5 +1,8 @@
 {% extends 'base.html.twig' %}
 
+
+{% block title %}买泡面日记{% endblock %}
+
 {% block body %}
     <style>
         .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
@@ -8,36 +11,43 @@
 
     <div class="example-wrapper">
     {% verbatim %}
-        <div id="articleApp">
-        <rich-editor name="content" :value="article.content" content-change-event="contentChange"></rich-editor>
+        <div id="app">
+            买泡面的过程日记：
+            <rich-editor name="content" :value="content" content-change-event="contentChange"></rich-editor>
+            <button type="button" @click="broughtPaoMian">买完泡面</button>
         </div>
     {% endverbatim %}
         <script>
-            var articleApp;
+            var app;
             require(["rich-editor"], function () {
-                articleApp = new Vue({
-                    el: "#articleApp",
+                app = new Vue({
+                    el: "#app",
                     data: {
-                        article: {content:""},
+                        content: ""
 
                     },
                     events: {
                         contentChange: function (newValue, oldValue, subject) {
-                            this.article.content = newValue;
+                            this.content = newValue;
+                        }
+                    },
+                    methods: {
+                        broughtPaoMian: function () {
+                            var reqData = {
+                                content: this.content
+                            };
+                            $.post(window.location.href, reqData, function (response) {
+                                console.log(response)
+
+                                alert("处理成功");
+                                window.href = "/makeflow-user/dashboard";
+                            })
                         }
                     }
                 });
             });
         </script>
 
-        <form method="post">
-            <input name="paidMoney" type="number" placeholder="买泡面开销">
-            <button type="submit">买完泡面</button>
-        </form>
-
-
-        {{ dump(noteList) }}
-        {{ dump(workspace) }}
 
     </div>
 {% endblock %}

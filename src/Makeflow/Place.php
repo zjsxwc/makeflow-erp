@@ -11,6 +11,7 @@ namespace App\Makeflow;
 use App\Makeflow\Dashboard\Entity\PlaceUser;
 use App\Makeflow\Dashboard\Entity\Workspace;
 use App\Repository\UserRepository;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 use Doctrine\ORM\EntityManagerInterface;
@@ -110,6 +111,19 @@ abstract class Place
         $content = $this->twig->render("@" . $twigNamespace . "/" . $view, $parameters);
         $response->setContent($content);
         return $response;
+    }
+
+    /**
+     * Returns a JsonResponse.
+     * @param $data
+     * @param int $status
+     * @param array $headers
+     * @param array $context
+     * @return JsonResponse
+     */
+    protected function json($data, int $status = 200, array $headers = array(), array $context = array()): JsonResponse
+    {
+        return new JsonResponse($data, $status, $headers);
     }
 
 
