@@ -22,9 +22,6 @@ class BuyPaoMianPlace extends Place
 
     public function processAction(Request $request, Workspace $workspace)
     {
-
-        //$noteList = $this->entityManager->getRepository("PaoMianMakeflow:Note")->findMoreComplex();
-
         if ($request->getMethod() === "POST") {
             $content = $request->request->get("content");
             $note = new Note();

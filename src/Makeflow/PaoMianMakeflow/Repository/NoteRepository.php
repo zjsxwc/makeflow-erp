@@ -18,15 +18,11 @@ class NoteRepository extends \Doctrine\ORM\EntityRepository
      * @return Note[]
      * @inheritdoc
      */
-    public function findMoreComplex()
+    public function getNoteListByWorkspaceId($workspaceId)
     {
-        $qb = $this->createQueryBuilder("n")
-            ->where("n.content LIKE :likeTerm")
-            ->setParameter("likeTerm", "%awesome%");
-        $query = $qb->getQuery();
-        $noteList = $query->getResult();
-        return $noteList;
+        return $this->findBy([
+            "workspaceId" => $workspaceId
+        ]);
     }
-
 
 }

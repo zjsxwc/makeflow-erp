@@ -9,10 +9,21 @@
 namespace App\Makeflow\PaoMianMakeflow\Place;
 
 
+use App\Makeflow\Dashboard\Entity\Workspace;
 use App\Makeflow\Place;
+use Symfony\Component\HttpFoundation\Request;
 
 class MakePaoMianPlace extends Place
 {
     protected $name = "MakePaoMian";
     public $label="泡泡面";
+
+    public function processAction(Request $request, Workspace $workspace)
+    {
+
+        $noteList = $this->entityManager->getRepository("PaoMianMakeflow:Note")->getNoteListByWorkspaceId($workspace->getId());
+
+        dump($noteList);die;
+
+    }
 }
