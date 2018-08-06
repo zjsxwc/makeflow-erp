@@ -1,8 +1,9 @@
 
 <p align="center">
-![](./makeflow.png)
-  </p>
-
+    <a href="#">
+      <img src="https://raw.githubusercontent.com/zjsxwc/makeflow-erp/master/src/Makeflow/PaoMianMakeflow/makeflow.png">
+    </a>
+</p>
 
 ## 一个吃泡面的例子
 
