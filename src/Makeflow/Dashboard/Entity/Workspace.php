@@ -22,7 +22,7 @@ class Workspace
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    protected $id;
+    public $id;
 
 
     /**

@@ -154,7 +154,7 @@ class MakeflowUserController extends Controller
             "workspace" => $workspace
         ];
         return $this->json([
-            "code" => 1,
+            "code" => -1,
             "data" => $data
         ]);
     }
@@ -185,9 +185,10 @@ class MakeflowUserController extends Controller
          *       "makeflowName1"  => [
          *           "makeflowName" => "makeflowName1",
          *           "placeNames" => [ "placeName1", "placeName2" ],
-         *          "workspaces" => [
+         *          "workspacePackages" => [
          *                  [
-         *                    "placeName" => "placeName1"
+         *                     "makeflowName" => "makeflowName1",
+         *                     "placeName" => "placeName1"
          *                     "workspace" =>  workspaceObj1
          *                  ],
          *          ]
@@ -217,7 +218,7 @@ class MakeflowUserController extends Controller
                 $userInvolvedPlaces[$makeflowName] = [
                     "makeflowName" => $makeflowName,
                     "placeNames" => [$placeName],
-                    "workspaces" => []
+                    "workspacePackages" => []
                 ];
             }
         }
@@ -237,7 +238,7 @@ class MakeflowUserController extends Controller
             foreach ($workspaceProcessingPlaces as $workspaceProcessingPlace) {
                 if (in_array($workspaceProcessingPlace->getName(), $placeNames)) {
                     $placeName = $workspaceProcessingPlace->getName();
-                    $userInvolvedPlaces[$makeflowName]["workspaces"][] = [
+                    $userInvolvedPlaces[$makeflowName]["workspacePackages"][] = [
                         "placeName" => $placeName,
                         "makeflowName" => $makeflowName,
                         "workspace" => $workspace

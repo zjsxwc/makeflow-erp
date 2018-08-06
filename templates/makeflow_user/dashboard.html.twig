@@ -3,5 +3,286 @@
 {% block title %}User Dashboard{% endblock %}
 
 {% block body %}
-    {{ dump() }}
+    <style>
+        .makeflow-place-circle {
+            cursor: pointer;
+        }
+        .makeflow-place-text {
+            cursor: pointer;
+        }
+    </style>
+
+    {% verbatim %}
+        <div id="app">
+            <template v-for="makeflowGraph in makeflowGraphs">
+                {{ makeflowGraph.makeflowLabel }}
+                <br>
+                <svg xmlns="http://www.w3.org/2000/svg" version="1.1"
+                    :width="makeflowGraph.svgData.width"
+                    :height="makeflowGraph.svgData.height">
+
+                   <template v-for="svgPlace in makeflowGraph.svgData.places">
+
+                        <circle stroke="black" stroke-width="2" class="makeflow-place-circle"
+                        @click="choosePlace(svgPlace)"
+                        @mouseover="hoverPlace(svgPlace)"
+                            :cx="svgPlace.circleX"
+                            :cy="svgPlace.circleY"
+                            :r="svgPlace.circleRound"
+                            :fill="getColor(svgPlace.color, {makeflowName: makeflowGraph.makeflowName, placeName: svgPlace.placeName})"
+                            :makeflow-name="svgPlace.makeflowName"
+                            :place-name="svgPlace.placeName" />
+                        <text fill="#581845" class="makeflow-place-text"
+                        @click="choosePlace(svgPlace)"
+                            :x="svgPlace.textX"
+                            :y="svgPlace.textY" >
+                            {{svgPlace.label}}
+                            <template v-if="isUserOwnThePlace(svgPlace.placeName, svgPlace.makeflowName)">
+                                {{ getWorkspaceCount(svgPlace.placeName, svgPlace.makeflowName) }}
+                            </template>
+                        </text>
+
+                    </template>
+
+                    <template v-for="svgDirectedLine in makeflowGraph.svgData.directedLines">
+                        <line style="stroke:rgb(99,99,99);stroke-width:2"
+                            :x1="svgDirectedLine.lineStartX"
+                            :y1="svgDirectedLine.lineStartY"
+                            :x2="svgDirectedLine.lineEndX"
+                            :y2="svgDirectedLine.lineEndY" />
+                        <circle stroke="black" stroke-width="2" fill="black"
+                            :cx="svgDirectedLine.lineEndX"
+                            :cy="svgDirectedLine.lineEndY"
+                            :r="svgDirectedLine.smallRound" />
+                    </template>
+
+                </svg>
+            </template>
+            <br>
+
+            <span>节点名：{{ currentPlace.placeLabel }}[{{ currentPlace.makeflowLabel }}]</span>
+            <br>
+            <template v-if="canPlaceCreateNewWorkspace()">
+                <input v-model="willCreateWorkspaceTitle" placeholder="新任务名"><button type="button" @click="createWorkspace">创建新任务</button>
+            </template>
+
+            <br>
+            <span>当前节点待处理任务：</span>
+            <br>
+
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Title</th>
+                        <th>Operation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="currentWorkspace in currentWorkspaces">
+                        <th scope="row">{{ currentWorkspace.id }}</th>
+                        <td>{{ currentWorkspace.title }}</td>
+                        <td><a :href="'/makeflow-user/workspace/'+currentWorkspace.id+'/place/'+currentPlace.placeName" target="_blank">处理</a></td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+    {% endverbatim %}
+    <script>
+        var app;
+        var LOG = console.log;
+        function vueArrayMerge (originVueArray, beMergedArray) {
+            return Object.assign({}, originVueArray, beMergedArray);
+        }
+        function vueArrayConcatenate(originVueArray, beConcatenatedArray) {
+            var lengthOrigin = vueArrayLength(originVueArray);
+            var lengthBeConcatenated = vueArrayLength(beConcatenatedArray);
+            var arrayObj = {};
+            for (var i = 0; i < lengthBeConcatenated; i++) {
+                arrayObj[lengthOrigin+1+i] = beConcatenatedArray[i];
+            }
+            return vueArrayMerge(originVueArray, arrayObj);
+        }
+        function vueArrayClear () {
+            return Object.assign({});
+        }
+        function vueArrayLength (vueArray) {
+            return Object.keys(vueArray).length;
+        }
+        
+
+        function getKeyOfPlace (placeName, makeflowName) {
+            return placeName + "@" + makeflowName;
+        }
+
+        var i;
+
+        var userInvolvedPlaces = {{ userInvolvedPlaces|json_encode|raw }};
+        var makeflowGraphs = {{ makeflowGraphs|json_encode|raw }};
+        require([], function () {
+            var currentPlace = {
+                makeflowName: "",
+                placeName: "",
+                makeflowLabel: "",
+                placeLabel: ""
+            };
+            var workspacesOfPlace = {};
+            var placesOfMakeflow = {};
+            for (i = 0; i < userInvolvedPlaces.length; i++) {
+                var userInvolvedPlace = userInvolvedPlaces[0];
+                placesOfMakeflow[userInvolvedPlace.makeflowName] = userInvolvedPlace.placeNames;
+                for (var j = 0; j < userInvolvedPlace.workspacePackages.length; j++) {
+                    //这里面可能同一个节点key会有多个workspace
+                    var workspacePackage = userInvolvedPlace.workspacePackages[j];
+                    var key = getKeyOfPlace(workspacePackage.placeName, workspacePackage.makeflowName);
+                    if (!workspacesOfPlace[key]) {
+                        workspacesOfPlace[key] = [workspacePackage.workspace];
+                    } else {
+                        workspacesOfPlace[key].push(workspacePackage.workspace);
+                    }
+                }
+            }
+            var makeflowConfigOfMakeflow = {};
+            for (i = 0; i < makeflowGraphs.length; i++) {
+                var makeflowGraph = makeflowGraphs[i];
+                makeflowConfigOfMakeflow[makeflowGraph.makeflowName] = makeflowGraph.makeflowConfig;
+            }
+
+            app = new Vue({
+                el: "#app",
+                data: {
+                    makeflowGraphs: makeflowGraphs,
+                    currentPlace: currentPlace,
+                    workspacesOfPlace: workspacesOfPlace,
+                    placesOfMakeflow: placesOfMakeflow,
+                    makeflowConfigOfMakeflow: makeflowConfigOfMakeflow,
+                    willCreateWorkspaceTitle: ""
+                },
+                computed: {
+                    currentWorkspaces: function () {
+                        return this.getWorkspaces();
+                    }
+                },
+                ready: function () {
+                },
+                methods: {
+                    getColor: function (defaultColor, place) {
+                        var color = defaultColor;
+                        if (this.isUserOwnThePlace(place.placeName, place.makeflowName)) {
+                            color = "#9900ff";
+                        }
+
+                        if (
+                            (place.makeflowName === this.currentPlace.makeflowName)
+                            && (place.placeName === this.currentPlace.placeName)
+                        ) {
+                            color = "red";
+                        }
+                        return color;
+                    },
+                    hoverPlace: function (svgPlace) {
+                        LOG(svgPlace.placeDescription);
+                    },
+
+                    isUserOwnThePlace: function (placeName, makeflowName) {
+                        if (!this.placesOfMakeflow[makeflowName]) {
+                            return false;
+                        }
+                        var isUserOwnThePlace = false;
+                        for (var i = 0; i < this.placesOfMakeflow[makeflowName].length; i++) {
+                            if (this.placesOfMakeflow[makeflowName][i] === placeName) {
+                                isUserOwnThePlace = true;
+                                break;
+                            }
+                        }
+                        return isUserOwnThePlace;
+                    },
+
+                    choosePlace: function (svgPlace) {
+                        var makeflowName = svgPlace.makeflowName;
+                        var placeName = svgPlace.placeName;
+
+                        if (!this.isUserOwnThePlace(placeName, makeflowName)) {
+                            LOG("没有权限");
+                            return;
+                        }
+
+                        this.currentPlace.makeflowName = svgPlace.makeflowName;
+                        this.currentPlace.placeName = svgPlace.placeName;
+                        this.currentPlace.makeflowLabel = svgPlace.makeflowLabel;
+                        this.currentPlace.placeLabel = svgPlace.placeLabel;
+
+                    },
+                    getWorkspaces: function () {
+                        if (!this.currentPlace.placeName) {
+                            return [];
+                        }
+                        var makeflowName = this.currentPlace.makeflowName;
+                        var placeName = this.currentPlace.placeName;
+                        var key = getKeyOfPlace(placeName, makeflowName);
+                        if (this.workspacesOfPlace[key]) {
+                            return this.workspacesOfPlace[key];
+                        }
+                        return [];
+                    },
+
+                    getWorkspaceCount: function (placeName, makeflowName) {
+                        var count = 0;
+                        var key = getKeyOfPlace(placeName, makeflowName);
+                        if (this.workspacesOfPlace[key]) {
+                            count = this.workspacesOfPlace[key].length;
+                        }
+                        return count;
+                    },
+
+                    canPlaceCreateNewWorkspace: function () {
+                        if (!this.currentPlace.makeflowName) {
+                            return false;
+                        }
+                        if (!this.currentPlace.placeName) {
+                            return false;
+                        }
+                        if (!this.makeflowConfigOfMakeflow[this.currentPlace.makeflowName]) {
+                            return false;
+                        }
+                        var makeflowConfig = this.makeflowConfigOfMakeflow[this.currentPlace.makeflowName];
+                        if (makeflowConfig[this.currentPlace.placeName] === undefined) {
+                            return false;
+                        }
+
+                        return (makeflowConfig[this.currentPlace.placeName].length === 0);
+                    },
+
+                    createWorkspace: function () {
+                        if (!this.canPlaceCreateNewWorkspace()) {
+                            return;
+                        }
+                        if (!this.willCreateWorkspaceTitle) {
+                            return;
+                        }
+                        var title = this.willCreateWorkspaceTitle;
+                        this.willCreateWorkspaceTitle = "";
+
+                        var reqData = {
+                            title: title
+                        };
+
+                        $.post('/makeflow-user/makeflow/'+this.currentPlace.makeflowName+'/create-workspace', reqData, function (response) {
+                            LOG(response);
+                            if (response.code !== -1) {
+                                return;
+                            }
+                            var key = getKeyOfPlace(this.currentPlace.placeName, this.currentPlace.makeflowName);
+                            var oldWorkspaces = this.workspacesOfPlace[key];
+                            this.workspacesOfPlace[key] = vueArrayConcatenate(oldWorkspaces, [response.data.workspace]);
+                        }.bind(this))
+
+                    }
+                }
+            });
+        });
+    </script>
+
+
 {% endblock %}
