@@ -223,17 +223,19 @@ abstract class Place
 
     /**
      * @param Workspace $workspace
-     * @param string $extraPrerequisiteName  refer to \App\Makeflow\Place::$extraPrerequisites
+     * @param string[] $extraPrerequisites  refer to \App\Makeflow\Place::$extraPrerequisites
      */
-    protected function finishPlace(Workspace $workspace, $extraPrerequisiteName = "")
+    protected function finishPlace(Workspace $workspace, $extraPrerequisites = [])
     {
         if ($workspace->getMakeflowName() !== $this->makeflow->getName()) {
             throw new  \LogicException(sprintf('Place %s makeflow  %s not for workspace makeflow %s', $this->getName(), $this->makeflow->getName(), $workspace->getMakeflowName()));
         }
         $placeName = $this->getName();
         $workspace->addDirectory($placeName);
-        if ($extraPrerequisiteName) {
-            $workspace->addDirectory($extraPrerequisiteName);
+        if ($extraPrerequisites) {
+            foreach ($extraPrerequisites as $extraPrerequisite) {
+                $workspace->addDirectory($extraPrerequisite);
+            }
         }
 
         if ($this->isFinalPlace) {
