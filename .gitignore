@@ -10,7 +10,7 @@
 /public/upload-prod/
 /public/upload-test/
 /var/
-/vendor/
+### /vendor/
 ###< symfony/framework-bundle ###
 
 ###> symfony/phpunit-bridge ###
