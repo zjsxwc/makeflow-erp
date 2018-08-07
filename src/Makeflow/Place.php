@@ -221,6 +221,10 @@ abstract class Place
 
     protected $isFinalPlace = false;
 
+    /**
+     * @param Workspace $workspace
+     * @param string $extraPrerequisiteName  refer to \App\Makeflow\Place::$extraPrerequisites
+     */
     protected function finishPlace(Workspace $workspace, $extraPrerequisiteName = "")
     {
         if ($workspace->getMakeflowName() !== $this->makeflow->getName()) {
