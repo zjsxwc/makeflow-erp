@@ -146,11 +146,16 @@ class WorkspaceContext
         $makeflowConfig = $this->makeflow->getMakeflowConfig();
         $workspaceDirectory = $this->workspace->getDirectory();
 
+        $places = $this->makeflow->getPlaces();
         //获取 先决条件满足，但目标没有出现的那些place
 
         $processingPlaceNames = [];
         foreach ($makeflowConfig as $targetPlaceName => $prerequisites) {
             if (!in_array($targetPlaceName, $workspaceDirectory)) {
+                $targetPlace = $places[$targetPlaceName];
+                if ($targetPlace->getExtraPrerequisites()) {
+                    $prerequisites = array_merge($prerequisites, $targetPlace->getExtraPrerequisites());
+                }
                 $isAllPrerequisitesInDirectory = true;
                 foreach ($prerequisites as $prerequisite) {
                     if (!in_array($prerequisite, $workspaceDirectory)) {

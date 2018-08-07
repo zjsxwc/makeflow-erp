@@ -21,6 +21,24 @@ use Symfony\Component\HttpFoundation\Request;
 abstract class Place
 {
 
+    /** @var string[]
+     * 额外的前置要求，用于有多个结果的分支情况，比如泡面超市卖光了，
+     * 这时就应该触发`不吃泡面`节点，而这个节点就是`买泡面` 节点的另一个分支，
+     * 于是这个节点就需要提供`extraPrerequisites`属性来区别默认的`泡泡面`节点。
+     * eg: `不吃泡面`节点的`extraPrerequisites`是`["NO_PAOMIAN_IN_SHOP"]`
+     * 我们可以在`买泡面`节点完成时，给Workspace的directory多增加"NO_PAOMIAN_IN_SHOP"，
+     * 为了防止同时触发默认的`泡泡面`节点，我们也要给`泡泡面`节点的extraPrerequisites`设置个值["EXIST_PAOMIAN_IN_SHOP"]
+     */
+    protected $extraPrerequisites = [];
+
+    /**
+     * @return string[]
+     */
+    public function getExtraPrerequisites()
+    {
+        return $this->extraPrerequisites;
+    }
+
     /** @var Makeflow */
     protected $makeflow;
 
@@ -201,16 +219,20 @@ abstract class Place
     }
 
 
-    protected function finishPlace(Workspace $workspace)
+    protected $isFinalPlace = false;
+
+    protected function finishPlace(Workspace $workspace, $extraPrerequisiteName = "")
     {
         if ($workspace->getMakeflowName() !== $this->makeflow->getName()) {
             throw new  \LogicException(sprintf('Place %s makeflow  %s not for workspace makeflow %s', $this->getName(), $this->makeflow->getName(), $workspace->getMakeflowName()));
         }
         $placeName = $this->getName();
         $workspace->addDirectory($placeName);
+        if ($extraPrerequisiteName) {
+            $workspace->addDirectory($extraPrerequisiteName);
+        }
 
-        //fixme 通过count判断是否完成workflow可能会不准确
-        if (count($this->makeflow->getMakeflowConfig()) === count($workspace->getDirectory())) {
+        if ($this->isFinalPlace) {
             $workspace->setStatus(Workspace::STATUS_FINISHED);
         }
         $this->entityManager->flush();

@@ -18,6 +18,7 @@ class EatPaoMianPlace extends Place
 {
     protected $name = "EatPaoMian";
     public $label = "吃泡面";
+    protected $isFinalPlace = true;
 
 
     public function processAction(Request $request, Workspace $workspace)

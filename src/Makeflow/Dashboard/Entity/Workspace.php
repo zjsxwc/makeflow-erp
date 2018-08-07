@@ -9,6 +9,7 @@
 namespace App\Makeflow\Dashboard\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use voku\helper\AntiXSS;
 
 /**
  * @ORM\Entity
@@ -205,7 +206,9 @@ class Workspace
      */
     public function setTitle(string $title): void
     {
-        $this->title = $title;
+        $antiXss = new AntiXSS();
+
+        $this->title = $antiXss->xss_clean($title);
     }
 
 
