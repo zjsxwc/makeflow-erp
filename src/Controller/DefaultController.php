@@ -15,8 +15,17 @@ class DefaultController extends Controller
      */
     public function index(Request $request)
     {
-        return $this->render('default/index.html.twig', [
-            'controller_name' => 'DefaultController',
+        return $this->render('default/index.html.twig', []);
+    }
+
+    /**
+     * @Route("/access-deny", name="access-deny")
+     */
+    public function accessDeny(Request $request)
+    {
+        $requestedUri = base64_decode($request->query->get("requestedUri"));
+        return $this->render('default/access_deny.html.twig', [
+            'requestedUri' => $requestedUri
         ]);
     }
 }

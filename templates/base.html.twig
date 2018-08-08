@@ -40,6 +40,10 @@
         {% endblock %}
     </head>
     <body>
+        {% if app.user %}
+            {{ app.user.username }}
+        {% endif %}
+
         {% block body %}{% endblock %}
         {% block javascripts %}{% endblock %}
     </body>

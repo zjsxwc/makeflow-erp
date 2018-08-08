@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}权限不足{% endblock %}
+
+{% block body %}
+
+    <p>
+        访问地址{{ requestedUri }}权限不足
+        <br>
+        请重新登录为有权限的账户
+    </p>
+
+    <a href="/login">去登录</a>
+
+
+{% endblock %}
