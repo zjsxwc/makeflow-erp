@@ -40,7 +40,7 @@
         {% endblock %}
     </head>
     <body>
-        {% if app.user %}
+        {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
             {{ app.user.username }}
         {% endif %}
 
