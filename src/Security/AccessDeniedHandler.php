@@ -17,7 +17,7 @@ class AccessDeniedHandler implements AccessDeniedHandlerInterface
 {
     public function handle(Request $request, AccessDeniedException $accessDeniedException)
     {
-        $requestedUri = base64_encode($request->getUri());
+        $requestedUri = urlencode($request->getUri());
         return new RedirectResponse("/access-deny?requestedUri=".$requestedUri);
     }
 }

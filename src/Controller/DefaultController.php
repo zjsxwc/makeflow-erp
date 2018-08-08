@@ -23,7 +23,7 @@ class DefaultController extends Controller
      */
     public function accessDeny(Request $request)
     {
-        $requestedUri = base64_decode($request->query->get("requestedUri"));
+        $requestedUri = urldecode($request->query->get("requestedUri"));
         return $this->render('default/access_deny.html.twig', [
             'requestedUri' => $requestedUri
         ]);
