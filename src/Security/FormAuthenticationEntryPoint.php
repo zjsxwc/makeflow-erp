@@ -53,7 +53,7 @@ class FormAuthenticationEntryPoint implements AuthenticationEntryPointInterface
      */
     public function start(Request $request, AuthenticationException $authException = null)
     {
-//        dump("权限不够，开始跳转登录页去登录");die;
+//        dump("未登录导致的权限不够，开始跳转登录页去登录");die;
         if ($this->useForward) {
             $subRequest = $this->httpUtils->createRequest($request, $this->loginPath);
 

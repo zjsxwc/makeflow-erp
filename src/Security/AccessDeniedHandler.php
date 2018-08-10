@@ -17,6 +17,7 @@ class AccessDeniedHandler implements AccessDeniedHandlerInterface
 {
     public function handle(Request $request, AccessDeniedException $accessDeniedException)
     {
+//        dump("已登录用户权限不够，开始跳转登录页去换账户登录");die;
         $requestedUri = urlencode($request->getUri());
         return new RedirectResponse("/access-deny?requestedUri=".$requestedUri);
     }
