@@ -1,5 +1,5 @@
 <?php
-namespace App\Makeflow\DimaCaiGouMakeflow\Place;
+namespace App\Makeflow\CaiGouMakeflow\Place;
 
 use App\Makeflow\Dashboard\Entity\Workspace;
 use App\Makeflow\Place;

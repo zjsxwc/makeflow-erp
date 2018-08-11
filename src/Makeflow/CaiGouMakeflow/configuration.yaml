@@ -1,0 +1,15 @@
+doctrine:
+    orm:
+        mappings:
+            CaiGouMakeflow:
+                is_bundle: false
+                type: annotation
+                dir: '%kernel.project_dir%/src/Makeflow/CaiGouMakeflow/Entity'
+                prefix: 'App\Makeflow\CaiGouMakeflow\Entity'
+
+twig:
+    paths:
+        - { namespace: CaiGouMakeflow, value: '%kernel.project_dir%/src/Makeflow/CaiGouMakeflow/View' }
+
+    debug: '%kernel.debug%'
+    strict_variables: '%kernel.debug%'

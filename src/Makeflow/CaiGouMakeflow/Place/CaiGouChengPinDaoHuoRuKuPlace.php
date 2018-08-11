@@ -1,13 +1,13 @@
 <?php
-namespace App\Makeflow\DimaCaiGouMakeflow\Place;
+namespace App\Makeflow\CaiGouMakeflow\Place;
 
 use App\Makeflow\Dashboard\Entity\Workspace;
 use App\Makeflow\Place;
 use Symfony\Component\HttpFoundation\Request;
 
-class CaiGouChengPinPlace extends Place
+class CaiGouChengPinDaoHuoRuKuPlace extends Place
 {
-    public $label = "采购成品";
+    public $label = "采购成品到货入库";
 
     public $description = "";
 

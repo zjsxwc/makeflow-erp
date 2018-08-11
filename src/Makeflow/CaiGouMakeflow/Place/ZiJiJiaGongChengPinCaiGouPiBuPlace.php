@@ -1,17 +1,15 @@
 <?php
-namespace App\Makeflow\DimaCaiGouMakeflow\Place;
+namespace App\Makeflow\CaiGouMakeflow\Place;
 
 use App\Makeflow\Dashboard\Entity\Workspace;
 use App\Makeflow\Place;
 use Symfony\Component\HttpFoundation\Request;
 
-class ZiJiJiaGongChengPinJueCePlace extends Place
+class ZiJiJiaGongChengPinCaiGouPiBuPlace extends Place
 {
-
-    public $label = "自己加工成品方案选择";
+    public $label = "开始采购坯布";
 
     public $description = "";
-
 
     public function processAction(Request $request, Workspace $workspace)
     {
