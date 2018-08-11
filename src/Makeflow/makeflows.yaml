@@ -1,2 +1,3 @@
 makeflows:
     - App\Makeflow\PaoMianMakeflow\PaoMianMakeflow
+    - App\Makeflow\DimaCaiGouMakeflow\DimaCaiGouMakeflow

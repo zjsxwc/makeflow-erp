@@ -1,0 +1,21 @@
+
+CaiGouChengPin: ChengPinXvQiu
+
+ZiJiJiaGongChengPinJueCe: ChengPinXvQiu
+
+ChengPinCangKuFaHuo:
+    - ChengPinXvQiu
+    - CaiGouChengPinDaoHuoRuKu
+    - ZiJiJiaGongChengPinWanChengRuKu
+
+CaiGouChengPinDaoHuoRuKu: CaiGouChengPin
+
+ZiJiJiaGongChengPinWanChengRuKu: ZiJiJiaGongChengPin
+
+ZiJiJiaGongChengPin:
+    - ZiJiJiaGongChengPinJueCe
+    - ZiJiJiaGongChengPinCaiGouPiBuDaoHuoRuKu
+
+ZiJiJiaGongChengPinCaiGouPiBuDaoHuoRuKu: ZiJiJiaGongChengPinCaiGouPiBu
+
+ZiJiJiaGongChengPinCaiGouPiBu: ZiJiJiaGongChengPinJueCe

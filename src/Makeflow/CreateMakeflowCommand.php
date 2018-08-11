@@ -132,13 +132,14 @@ EOT;
 <?php
 namespace App\Makeflow\\$makeflowName\Place;
 
+use App\Makeflow\Dashboard\Entity\Workspace;
 use App\Makeflow\Place;
 use Symfony\Component\HttpFoundation\Request;
 
 class $placeName extends Place
 {
 
-    public function processAction(Request \$request)
+    public function processAction(Request \$request, Workspace \$workspace)
     {
         //return \$this->render("xxx.html.twig", []);
     }

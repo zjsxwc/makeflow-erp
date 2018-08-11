@@ -1,0 +1,15 @@
+doctrine:
+    orm:
+        mappings:
+            DimaCaiGouMakeflow:
+                is_bundle: false
+                type: annotation
+                dir: '%kernel.project_dir%/src/Makeflow/DimaCaiGouMakeflow/Entity'
+                prefix: 'App\Makeflow\DimaCaiGouMakeflow\Entity'
+
+twig:
+    paths:
+        - { namespace: DimaCaiGouMakeflow, value: '%kernel.project_dir%/src/Makeflow/DimaCaiGouMakeflow/View' }
+
+    debug: '%kernel.debug%'
+    strict_variables: '%kernel.debug%'

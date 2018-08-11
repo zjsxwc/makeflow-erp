@@ -90,7 +90,15 @@ class MakeflowConfigGraphGenerator
         $maxY = 1;
         $maxX = 1;
         $maxPlaceNameLength = 0;
+        /** @var string[][] $placeNamesByLevel */
+        $placeNamesByLevel = [];
         foreach ($placeLevels as $placeName => $placeLevel) {
+            if (isset($placeNamesByLevel[$placeLevel])) {
+                $placeNamesByLevel[$placeLevel][] = $placeName;
+            } else {
+                $placeNamesByLevel[$placeLevel] = [$placeName];
+            }
+
             if ($maxPlaceNameLength < mb_strlen($placeName)) {
                 $maxPlaceNameLength = mb_strlen($placeName);
             }
@@ -117,6 +125,53 @@ class MakeflowConfigGraphGenerator
                 $y[$placeLevel] = [$points[$placeName]];
             }
         }
+
+        //重新确定point的y值，不让线重合
+        ksort($placeNamesByLevel);
+        foreach ($placeNamesByLevel as $level => $placeNames) {
+            foreach ($placeNames as $placeName) {
+                $point = $points[$placeName];
+
+                $linesToPoint = [];
+                foreach ($directedLines as $directedLine) {
+                    $toPoint = $points[$directedLine["to"]];
+
+                    if ($toPoint["placeName"] === $placeName) {
+                        $linesToPoint[] = $directedLine;
+                    }
+                }
+                if ($linesToPoint) {
+
+                    $isNeedToTryY = true;
+                    while ($isNeedToTryY) {
+                        $isAllTanDiff = true;
+                        $allTan = [];
+                        foreach ($linesToPoint as $directedLine) {
+                            $fromPoint = $points[$directedLine["from"]];
+                            $tan = (floatval($points[$placeName]["y"]) - floatval($fromPoint["y"]))/(floatval($points[$placeName]["x"]) - floatval($fromPoint["x"]));
+                            if (in_array($tan, $allTan)) {
+                                $isAllTanDiff = false;
+                                break;
+                            } else {
+                                $allTan[] = $tan;
+                            }
+                        }
+                        if ($isAllTanDiff) {
+                            $isNeedToTryY = false;
+                        } else {
+                            $points[$placeName]["y"] += 0.3;
+                        }
+                    }
+                    if ($maxY < $points[$placeName]["y"]) {
+                        $maxY = $points[$placeName]["y"];
+                    }
+                }
+
+
+            }
+        }
+
+
 
         $pointSvgList = [];
         $interval = $maxPlaceNameLength * 10;
@@ -150,7 +205,7 @@ class MakeflowConfigGraphGenerator
                 "makeflowLabel" => $makeflowLabel,
                 "placeName" => $point["placeName"],
                 "textX" =>  $point["x"] * $interval - mb_strlen($label) * 5,
-                "textY" =>  $point["y"] * $interval + $interval / 3,
+                "textY" =>  $point["y"] * $interval + 30,
                 "label" => $label,
                 "placeLabel" => $point["placeLabel"],
                 "placeDescription" => $point["placeDescription"]
