@@ -176,6 +176,12 @@ class MakeflowConfigGraphGenerator
 
         $pointSvgList = [];
         $interval = $maxPlaceNameLength * 10;
+        if ($interval < 100) {
+            $interval = 100;
+        }
+        if ($interval > 160) {
+            $interval = 160;
+        }
         $round = 15;
         $svgData["places"] = [];
         foreach ($points as $point) {
