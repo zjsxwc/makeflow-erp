@@ -160,7 +160,7 @@ class MakeflowConfigGraphGenerator
                         if ($isAllTanDiff) {
                             $isNeedToTryY = false;
                         } else {
-                            $points[$placeName]["y"] += 0.3;
+                            $points[$placeName]["y"] += 0.7;
                         }
                     }
                     if ($maxY < $points[$placeName]["y"]) {
@@ -179,8 +179,8 @@ class MakeflowConfigGraphGenerator
         if ($interval < 100) {
             $interval = 100;
         }
-        if ($interval > 160) {
-            $interval = 160;
+        if ($interval > 150) {
+            $interval = 150;
         }
         $round = 15;
         $svgData["places"] = [];
