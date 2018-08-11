@@ -21,22 +21,43 @@ use Symfony\Component\HttpFoundation\Request;
 abstract class Place
 {
 
-    /** @var string[]
+
+    /** @var null|string
+     *
      * 额外的前置要求，用于有多个结果的分支情况，比如泡面超市卖光了，
      * 这时就应该触发`不吃泡面`节点，而这个节点就是`买泡面` 节点的另一个分支，
-     * 于是这个节点就需要提供`extraPrerequisites`属性来区别默认的`泡泡面`节点。
-     * eg: `不吃泡面`节点的`extraPrerequisites`是`["NO_PAOMIAN_IN_SHOP"]`
+     * 于是这个节点就需要提供`extraPrerequisite`属性来区别默认的`泡泡面`节点。
+     * eg: `不吃泡面`节点的`extraPrerequisite`是`"NO_PAOMIAN_IN_SHOP"`
      * 我们可以在`买泡面`节点完成时，给Workspace的directory多增加"NO_PAOMIAN_IN_SHOP"，
-     * 为了防止同时触发默认的`泡泡面`节点，我们也要给`泡泡面`节点的extraPrerequisites`设置个值["EXIST_PAOMIAN_IN_SHOP"]
+     * 为了防止同时触发默认的`泡泡面`节点，我们也要给`泡泡面`节点的extraPrerequisite`设置个值["EXIST_PAOMIAN_IN_SHOP"]
+     *     /
+     *  -  --  分叉选择
+     *    \
      */
-    protected $extraPrerequisites = [];
+    protected $extraPrerequisite = null;
 
     /**
-     * @return string[]
+     * @return string
      */
-    public function getExtraPrerequisites()
+    public function getExtraPrerequisite()
     {
-        return $this->extraPrerequisites;
+        return $this->extraPrerequisite;
+    }
+
+    /** @var null|string
+     * 只要字符串 substitutionPrerequisite 存在Workspace的directory里，那么就认为满足条件，用于实现`或`需求
+     * \
+     * - --   汇聚选择
+     * /
+     */
+    protected $substitutionPrerequisite = null;
+
+    /**
+     * @return null|string
+     */
+    public function getSubstitutionPrerequisite()
+    {
+        return $this->substitutionPrerequisite;
     }
 
     /** @var Makeflow */
@@ -236,7 +257,7 @@ abstract class Place
 
     /**
      * @param Workspace $workspace
-     * @param string[] $extraPrerequisites  refer to \App\Makeflow\Place::$extraPrerequisites
+     * @param string[] $extraPrerequisites refer to \App\Makeflow\Place::$extraPrerequisite || \App\Makeflow\Place::$substitutionPrerequisite
      */
     protected function finishPlace(Workspace $workspace, $extraPrerequisites = [])
     {

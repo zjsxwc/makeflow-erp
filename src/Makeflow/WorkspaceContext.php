@@ -153,14 +153,22 @@ class WorkspaceContext
         foreach ($makeflowConfig as $targetPlaceName => $prerequisites) {
             if (!in_array($targetPlaceName, $workspaceDirectory)) {
                 $targetPlace = $places[$targetPlaceName];
-                if ($targetPlace->getExtraPrerequisites()) {
-                    $prerequisites = array_merge($prerequisites, $targetPlace->getExtraPrerequisites());
+
+                if ($targetPlace->getExtraPrerequisite()) {
+                    $prerequisites[] = $targetPlace->getExtraPrerequisite();
                 }
+
                 $isAllPrerequisitesInDirectory = true;
                 foreach ($prerequisites as $prerequisite) {
                     if (!in_array($prerequisite, $workspaceDirectory)) {
                         $isAllPrerequisitesInDirectory = false;
                         break;
+                    }
+                }
+                if ($targetPlace->getSubstitutionPrerequisite()) {
+                    $substitutionPrerequisite = $targetPlace->getSubstitutionPrerequisite();
+                    if (in_array($substitutionPrerequisite, $workspaceDirectory)) {
+                        $isAllPrerequisitesInDirectory = true;
                     }
                 }
                 if ($isAllPrerequisitesInDirectory) {
