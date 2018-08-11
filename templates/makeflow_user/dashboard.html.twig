@@ -61,6 +61,7 @@
             <br>
 
             <span>节点名：{{ currentPlace.placeLabel }}[{{ currentPlace.makeflowLabel }}]</span>
+            <a v-if="currentPlace.canVisit" target="_blank" :href="'/makeflow-user/makeflow/'+currentPlace.makeflowName+'/place/'+currentPlace.placeName+'/visit'">进入</a>
             <br>
             <template v-if="canPlaceCreateNewWorkspace()">
                 <input v-model="willCreateWorkspaceTitle" placeholder="新任务名"><button type="button" @click="createWorkspace">创建新任务</button>
@@ -125,7 +126,8 @@
                 makeflowName: "",
                 placeName: "",
                 makeflowLabel: "",
-                placeLabel: ""
+                placeLabel: "",
+                canVisit: false
             };
             var workspacesOfPlace = {};
             var placesOfMakeflow = {};
@@ -212,6 +214,7 @@
                         this.currentPlace.placeName = svgPlace.placeName;
                         this.currentPlace.makeflowLabel = svgPlace.makeflowLabel;
                         this.currentPlace.placeLabel = svgPlace.placeLabel;
+                        this.currentPlace.canVisit = svgPlace.placeCanVisit;
 
                     },
                     getWorkspaces: function () {

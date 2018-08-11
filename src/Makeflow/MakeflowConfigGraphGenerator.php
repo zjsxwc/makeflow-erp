@@ -108,6 +108,7 @@ class MakeflowConfigGraphGenerator
                 "placeDescription" => $places[$placeName]->description,
                 "level" => $placeLevel,
                 "x" => $placeLevel,
+                "canVisit" => $places[$placeName]->canVisit
             ];
             if ($maxX < $placeLevel) {
                 $maxX = $placeLevel;
@@ -208,7 +209,8 @@ class MakeflowConfigGraphGenerator
                 "textY" =>  $point["y"] * $interval + 30,
                 "label" => $label,
                 "placeLabel" => $point["placeLabel"],
-                "placeDescription" => $point["placeDescription"]
+                "placeDescription" => $point["placeDescription"],
+                "placeCanVisit" => $point["canVisit"]
             ];
         }
         $pointSvg = implode("", $pointSvgList);

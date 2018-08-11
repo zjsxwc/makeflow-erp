@@ -63,6 +63,16 @@
 
 >这里就会鉴权处理后，转发请求到自定义的`Place::processAction`里处理业务了
 
+
+
+#### 员工进入某个makeflow下的place额外操作
+
+/makeflow-user/makeflow/{makeflowName}/place/{placeName}  GET|POST
+
+>这里就会鉴权处理后，转发请求到自定义的`Place::visitAction`里处理业务了，需要place的canVisit为true
+
+
+
 #### 员工删除某个place下的前置条件，来实现回退功能
 
 /makeflow-user/workspace/{id}/place/{placeName}/delete-prerequisites  POST

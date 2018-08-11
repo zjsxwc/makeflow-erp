@@ -113,6 +113,19 @@ abstract class Place
         throw new RuntimeException("Need processAction()");
     }
 
+
+    public $canVisit = false;
+
+    /**
+     * @param Request $request
+     * @return Response
+     */
+    public function visitAction(Request $request)
+    {
+        $request->getMethod();
+        throw new RuntimeException("Need visitAction()");
+    }
+
     /**
      * @param string $view
      * @param array $parameters

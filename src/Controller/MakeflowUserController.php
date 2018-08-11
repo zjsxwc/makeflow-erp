@@ -118,6 +118,50 @@ class MakeflowUserController extends Controller
 
 
     /**
+     * @Route("/makeflow/{makeflowName}/place/{placeName}/visit", name="makeflow_user_visit_place", methods={"GET","POST"})
+     * @param Request $request
+     * @param $makeflowName
+     * @param $placeName
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
+    public function visitPlace(Request $request, $makeflowName, $placeName)
+    {
+        /** @var UserInterface $currentUser */
+        $currentUser = $this->getUser();
+        $userId = $currentUser->getId();
+
+        try {
+            $makeflowManager = $this->get("App\Makeflow\MakeflowManager");
+            $makeflows = $makeflowManager->getMakeflows();
+            if (!isset($makeflows[$makeflowName])) {
+                throw new \LogicException(sprintf("Not valid makeflowName %s", $makeflowName), 1);
+            }
+            $makeflow = $makeflows[$makeflowName];
+            $places = $makeflow->getPlaces();
+            if (!isset($places[$placeName])) {
+                throw new \LogicException(sprintf("Not valid placeName %s", $placeName), 2);
+            }
+            $place = $places[$placeName];
+            if (!$place->isUserAllowedInPlace($userId)) {
+                throw new \LogicException(sprintf("User not allowed in placeName %s", $placeName), 3);
+            }
+            if (!$place->canVisit) {
+                throw new \LogicException(sprintf("Place %s not allowed", $placeName), 4);
+            }
+
+            $response = $place->visitAction($request);
+        } catch (\Throwable $throwable) {
+            return $this->json([
+                "code" => $throwable->getCode(),
+                "message" => $throwable->getMessage()
+            ]);
+        }
+
+        return $response;
+    }
+
+
+    /**
      * @Route("/makeflow/{makeflowName}/create-workspace", name="makeflow_user_create_workspace", methods={"POST"})
      * @param Request $request
      * @param $makeflowName
