@@ -67,10 +67,10 @@ class WorkspaceContext
     }
 
     /**
-     * @param Place $processingPlace
+     * @param AbstractPlace $processingPlace
      * @param string[] $prerequisitePlaceNames
      */
-    public function fromProcessingPlaceDeletePrerequisites(Place $processingPlace,array $prerequisitePlaceNames)
+    public function fromProcessingPlaceDeletePrerequisites(AbstractPlace $processingPlace, array $prerequisitePlaceNames)
     {
         $currentProcessingPlaces = $this->getCurrentProcessingPlaces();
         $isProcessingPlaceAllowed = false;
@@ -109,7 +109,7 @@ class WorkspaceContext
 
     /**
      * @param $userId
-     * @return Place[]|array
+     * @return AbstractPlace[]|array
      */
     public function getUserCurrentProcessingPlaces($userId)
     {
@@ -125,7 +125,7 @@ class WorkspaceContext
             $userPlaceNames[] = $placeUser->getPlaceName();
         }
 
-        /** @var Place[] $currentUserProcessingPlaces */
+        /** @var AbstractPlace[] $currentUserProcessingPlaces */
         $currentUserProcessingPlaces = [];
         $currentProcessingPlaces = $this->getCurrentProcessingPlaces();
         foreach ($currentProcessingPlaces as $currentProcessingPlace) {
@@ -139,7 +139,7 @@ class WorkspaceContext
 
 
     /**
-     * @return Place[]|array
+     * @return AbstractPlace[]|array
      */
     public function getCurrentProcessingPlaces()
     {
@@ -177,7 +177,7 @@ class WorkspaceContext
             }
         }
 
-        /** @var Place[] $processingPlaces */
+        /** @var AbstractPlace[] $processingPlaces */
         $processingPlaces = [];
 
         foreach ($processingPlaceNames as $processingPlaceName) {

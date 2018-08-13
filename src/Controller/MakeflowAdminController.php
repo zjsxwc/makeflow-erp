@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Makeflow\Place;
+use App\Makeflow\AbstractPlace;
 use App\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -103,7 +103,7 @@ class MakeflowAdminController extends Controller
 
         $makeflowManager = $this->get("App\Makeflow\MakeflowManager");
         try {
-            /** @var Place $place */
+            /** @var AbstractPlace $place */
             $place = $makeflowManager->getMakeflows()[$makeflowName]->getPlaces()[$placeName];
         } catch (\Throwable $throwable) {
             return $this->json([
@@ -138,7 +138,7 @@ class MakeflowAdminController extends Controller
 
         $makeflowManager = $this->get("App\Makeflow\MakeflowManager");
         try {
-            /** @var Place $place */
+            /** @var AbstractPlace $place */
             $place = $makeflowManager->getMakeflows()[$makeflowName]->getPlaces()[$placeName];
             $place->bindUsersToPlace($userIdList);
         } catch (\Throwable $throwable) {
@@ -173,7 +173,7 @@ class MakeflowAdminController extends Controller
 
         $makeflowManager = $this->get("App\Makeflow\MakeflowManager");
         try {
-            /** @var Place $place */
+            /** @var AbstractPlace $place */
             $place = $makeflowManager->getMakeflows()[$makeflowName]->getPlaces()[$placeName];
             $place->removeUsers($userIdList);
         } catch (\Throwable $throwable) {

@@ -11,10 +11,10 @@ namespace App\Makeflow\PaoMianMakeflow\Place;
 
 use App\Makeflow\Dashboard\Entity\Workspace;
 use App\Makeflow\PaoMianMakeflow\Entity\Note;
-use App\Makeflow\Place;
+use App\Makeflow\AbstractPlace;
 use Symfony\Component\HttpFoundation\Request;
 
-class HeatUpWaterPlace extends Place
+class HeatUpWaterPlace extends AbstractPlace
 {
     protected $name = "HeatUpWater";
     public $label = "烧水";

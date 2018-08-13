@@ -18,7 +18,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use SensioLabs\Security\Exception\RuntimeException;
 use Symfony\Component\HttpFoundation\Request;
 
-abstract class Place
+abstract class AbstractPlace
 {
 
 

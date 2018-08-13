@@ -2,10 +2,10 @@
 namespace App\Makeflow\CaiGouMakeflow\Place;
 
 use App\Makeflow\Dashboard\Entity\Workspace;
-use App\Makeflow\Place;
+use App\Makeflow\AbstractPlace;
 use Symfony\Component\HttpFoundation\Request;
 
-class ZiJiJiaGongChengPinWanChengRuKuPlace extends Place
+class ZiJiJiaGongChengPinWanChengRuKuPlace extends AbstractPlace
 {
 
     public $label = "完成自己加工成品开始入库操作";

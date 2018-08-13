@@ -116,11 +116,11 @@ abstract class Makeflow
         return $this->entityDir;
     }
 
-    /** @var Place[] */
+    /** @var AbstractPlace[] */
     protected $places = [];
 
     /**
-     * @return Place[]
+     * @return AbstractPlace[]
      */
     public function getPlaces()
     {
@@ -132,7 +132,7 @@ abstract class Makeflow
                 $placeClassName = $this->getNamespaceName() . "\\Place\\" . $baseName;
 
                 $mayPlace = new $placeClassName($this, $this->entityManager, $this->twig);
-                if (!$mayPlace instanceof Place) {
+                if (!$mayPlace instanceof AbstractPlace) {
                     continue;
                 }
                 $name = $mayPlace->getName();

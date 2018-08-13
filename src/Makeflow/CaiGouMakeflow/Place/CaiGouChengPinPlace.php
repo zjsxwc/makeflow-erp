@@ -2,10 +2,10 @@
 namespace App\Makeflow\CaiGouMakeflow\Place;
 
 use App\Makeflow\Dashboard\Entity\Workspace;
-use App\Makeflow\Place;
+use App\Makeflow\AbstractPlace;
 use Symfony\Component\HttpFoundation\Request;
 
-class CaiGouChengPinPlace extends Place
+class CaiGouChengPinPlace extends AbstractPlace
 {
     public $label = "采购成品";
 
