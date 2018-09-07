@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Makeflow\AbstractPlace;
 use App\Makeflow\Dashboard\Entity\PlaceUser;
 use App\Makeflow\Dashboard\Entity\Workspace;
 use App\Makeflow\Makeflow;
@@ -87,7 +88,7 @@ class MakeflowUserController extends Controller
      * @param Request $request
      * @param Workspace $workspace
      * @param $placeName
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     * @return \Symfony\Component\HttpFoundation\JsonResponse|\Symfony\Component\HttpFoundation\Response
      */
     public function processPlaceOfWorkspace(Request $request, Workspace $workspace, $placeName)
     {
@@ -96,6 +97,7 @@ class MakeflowUserController extends Controller
         $userId = $currentUser->getId();
 
         try {
+            /** @var AbstractPlace $place */
             list($makeflow, $places, $place) = $this->getPlace($workspace, $placeName, $userId);
 
             $directory = $workspace->getDirectory();
